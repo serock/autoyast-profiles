@@ -1,0 +1,608 @@
+<?xml version="1.0"?>
+<!DOCTYPE profile>
+<profile xmlns="http://www.suse.com/1.0/yast2ns">
+  <add-on t="map">
+    <add_on_products t="list">
+      <listentry t="map">
+        <alias>repo-oss</alias>
+        <media_url><![CDATA[http://download.opensuse.org/distribution/leap/$releasever/repo/oss/]]></media_url>
+        <name>Main Repository</name>
+        <product>Leap</product>
+      </listentry>
+      <listentry t="map">
+        <alias>repo-update</alias>
+        <media_url><![CDATA[http://download.opensuse.org/update/leap/$releasever/oss/]]></media_url>
+        <name>Main Update Repository</name>
+        <product>Leap</product>
+      </listentry>
+      <listentry t="map">
+        <alias>repo-backports-update</alias>
+        <media_url><![CDATA[http://download.opensuse.org/update/leap/$releasever/backports/]]></media_url>
+        <name>Update repository of openSUSE Backports</name>
+        <product>Leap</product>
+      </listentry>
+      <listentry t="map">
+        <alias>repo-sle-update</alias>
+        <media_url><![CDATA[http://download.opensuse.org/update/leap/$releasever/sle/]]></media_url>
+        <name>Update repository with updates from SUSE Linux Enterprise 15</name>
+        <product>Leap</product>
+      </listentry>
+      <listentry t="map">
+        <alias>repo-openh264</alias>
+        <media_url><![CDATA[http://codecs.opensuse.org/openh264/openSUSE_Leap/]]></media_url>
+        <name>Open H.264 Codec (openSUSE Leap)</name>
+        <product>Leap</product>
+      </listentry>
+    </add_on_products>
+  </add-on>
+  <% board = `cat /sys/devices/virtual/dmi/id/board_name | tr -d '\n'`.to_sym %>
+  <bootloader t="map">
+    <global t="map">
+      <hiddenmenu>false</hiddenmenu>
+      <os_prober>false</os_prober>
+      <secure_boot><%= board != :'4239CTO' %></secure_boot>
+    </global>
+  </bootloader>
+  <general t="map">
+    <ask-list t="list">
+      <ask t="map">
+        <question>Enter the username:</question>
+        <password t="boolean">false</password>
+        <pathlist t="list">
+          <path>users,1,fullname</path>
+          <path>users,1,username</path>
+        </pathlist>
+        <title>Username for user account</title>
+      </ask>
+      <ask t="map">
+        <question>Enter the password:</question>
+        <password t="boolean">true</password>
+        <pathlist t="list">
+          <path>users,0,user_password</path>
+          <path>users,1,user_password</path>
+        </pathlist>
+        <title>Password for user account</title>
+      </ask>
+      <ask t="map">
+        <question>Enter the key:</question>
+        <password t="boolean">true</password>
+        <pathlist t="list">
+          <path>partitioning,0,partitions,2,crypt_key</path>
+        </pathlist>
+        <title>Encryption key for home partition</title>
+      </ask>
+    </ask-list>
+    <mode t="map">
+      <final_halt t="boolean">true</final_halt>
+      <final_reboot t="boolean">false</final_reboot>
+      <final_restart_services t="boolean">false</final_restart_services>
+    </mode>
+  </general>
+  <groups t="list">
+    <group t="map">
+      <gid>0</gid>
+      <groupname>root</groupname>
+    </group>
+    <group t="map">
+      <gid>100</gid>
+      <groupname>users</groupname>
+    </group>
+  </groups>
+  <keyboard t="map">
+    <keymap>english-us</keymap>
+  </keyboard>
+  <language t="map">
+    <language>en_US</language>
+  </language>
+  <networking t="map">
+    <dns t="map">
+      <dhcp_hostname t="boolean">false</dhcp_hostname>
+      <hostname><%= { 'PRIME H370M-PLUS': 'desktop', '4239CTO': 'laptop15', 'IPXBD-RB': 'mini' }[board] %></hostname>
+      <resolv_conf_policy>auto</resolv_conf_policy>
+    </dns>
+    <keep_install_network t="boolean">true</keep_install_network>
+    <managed t="boolean">true</managed>
+  </networking>
+  <ntp-client t="map">
+    <ntp_policy>auto</ntp_policy>
+    <ntp_servers t="list"/>
+    <ntp_sync>systemd</ntp_sync>
+  </ntp-client>
+  <partitioning t="list">
+    <drive t="map">
+      <device>/dev/<%= { 'PRIME H370M-PLUS': 'nvme0n1', '4239CTO': 'sda', 'IPXBD-RB': 'sda' }[board] %></device>
+      <disklabel>gpt</disklabel>
+      <enable_snapshots t="boolean">false</enable_snapshots>
+      <initialize t="boolean">true</initialize>
+      <partitions t="list">
+        <partition t="map">
+          <create t="boolean">true</create>
+          <filesystem t="symbol">vfat</filesystem>
+          <format t="boolean">true</format>
+          <fstopt>codepage=437</fstopt>
+          <mount>/boot/efi</mount>
+          <partition_id t="integer">259</partition_id>
+          <size>512M</size>
+        </partition>
+        <partition t="map">
+          <create t="boolean">true</create>
+          <filesystem t="symbol">ext4</filesystem>
+          <format t="boolean">true</format>
+          <fstopt>noatime,acl,user_xattr</fstopt>
+          <mount>/</mount>
+          <partition_id t="integer">131</partition_id>
+          <size>100G</size>
+        </partition>
+        <partition t="map">
+          <create t="boolean">true</create>
+          <crypt_key>x</crypt_key>
+          <crypt_method t="symbol">luks1</crypt_method>
+          <filesystem t="symbol">ext4</filesystem>
+          <format t="boolean">true</format>
+          <fstopt>noatime,acl,user_xattr</fstopt>
+          <mount>/home</mount>
+          <partition_id t="integer">131</partition_id>
+          <size>max</size>
+        </partition>
+        <partition t="map">
+          <create t="boolean">true</create>
+          <filesystem t="symbol">swap</filesystem>
+          <format t="boolean">true</format>
+          <mount>swap</mount>
+          <partition_id t="integer">130</partition_id>
+          <size>2G</size>
+        </partition>
+      </partitions>
+      <type t="symbol">CT_DISK</type>
+      <use>all</use>
+    </drive>
+  </partitioning>
+  <scripts t="map">
+    <post-scripts t="list">
+      <script t="map">
+        <feedback t="boolean">false</feedback>
+        <filename>post-script-nm.sh</filename>
+        <source><![CDATA[#!/bin/bash
+nmcli connection modify eth0 \
+autoconnect no \
+ethernet.wake-on-lan ignore
+
+nmcli connection add \
+con-name wired-lan-public \
+type ethernet \
+autoconnect no \
+connection.autoconnect-priority 10 \
+ifname eth0 \
+ethernet.wake-on-lan ignore \
+ipv4.dns "208.67.222.222 208.67.220.220" \
+ipv4.ignore-auto-dns yes \
+ipv4.method auto \
+ipv6.dns "2620:119:35::35 2620:119:53::53" \
+ipv6.ignore-auto-dns yes \
+ipv6.method auto
+
+nmcli connection add \
+con-name wired-lan-home \
+type ethernet \
+connection.autoconnect-priority 1 \
+ifname eth0 \
+ethernet.wake-on-lan ignore \
+ipv4.method auto \
+ipv6.method auto
+]]>
+        </source>
+      </script>
+    </post-scripts>
+    <init-scripts t="list">
+      <script t="map">
+        <filename>init-script-nm.sh</filename>
+        <source><![CDATA[#!/bin/bash
+nmcli radio all off
+]]>
+        </source>
+      </script>
+    </init-scripts>
+  </scripts>
+  <security t="map">
+    <pass_max_days>1461</pass_max_days>
+    <pass_min_days>1</pass_min_days>
+    <pass_warn_age>14</pass_warn_age>
+    <permission_security>easy</permission_security>
+  </security>
+  <services-manager t="map">
+    <services t="map">
+      <disable t="list">
+        <service>ModemManager</service>
+        <service>sshd</service>
+      </disable>
+    </services>
+  </services-manager>
+  <software t="map">
+    <install_recommended t="boolean">true</install_recommended>
+    <packages t="list">
+      <% if board == :'PRIME H370M-PLUS' %><package>apcupsd</package><% end %>
+      <package>autoyast2-installation</package>
+      <package>autoyast2</package>
+      <package>chrony-pool-empty</package>
+      <package>ddclient</package>
+    </packages>
+    <patterns t="list">
+      <pattern>gnome</pattern>
+      <pattern>x11</pattern>
+      <pattern>base</pattern>
+      <pattern>x11_yast</pattern>
+      <pattern>yast2_basis</pattern>
+    </patterns>
+    <post-packages t="list">
+      <% if board == :'PRIME H370M-PLUS' %><package>apcupsd-gui</package><% end %>
+      <package>gstreamer-1.20-plugin-openh264</package>
+      <package>keepassxc</package>
+      <package>libcap-ng-utils</package>
+      <package>libfido2-udev</package>
+      <package>lsb-release</package>
+      <package>mozilla-openh264</package>
+      <% if board == :'PRIME H370M-PLUS' %><package>nvme-cli</package><% end %>
+      <package>wireshark-ui-qt</package>
+      <package>yubikey-manager</package>
+      <package>yubikey-manager-qt</package>
+    </post-packages>
+    <remove-packages t="list">
+      <package>chrony-pool-openSUSE</package>
+      <package>opensuse-welcome</package>
+    </remove-packages>
+  </software>
+  <sound t="map">
+    <configure_detected t="boolean">true</configure_detected>
+  </sound>
+  <ssh_import>
+    <import t="boolean">false</import>
+  </ssh_import>
+  <timezone t="map">
+    <hwclock>UTC</hwclock>
+    <timezone>America/New_York</timezone>
+  </timezone>
+  <user_defaults t="map">
+    <group>100</group>
+    <home>/home</home>
+    <inactive>-1</inactive>
+    <no_groups t="boolean">true</no_groups>
+    <shell>/bin/bash</shell>
+    <skel>/etc/skel</skel>
+    <umask>022</umask>
+  </user_defaults>
+  <users t="list">
+    <user t="map">
+      <encrypted t="boolean">false</encrypted>
+      <fullname>root</fullname>
+      <gid>0</gid>
+      <home>/root</home>
+      <home_btrfs_subvolume t="boolean">false</home_btrfs_subvolume>
+      <shell>/bin/bash</shell>
+      <user_password>x</user_password>
+      <username>root</username>
+    </user>
+    <user t="map">
+      <encrypted t="boolean">false</encrypted>
+      <fullname>x</fullname>
+      <home_btrfs_subvolume t="boolean">false</home_btrfs_subvolume>
+      <user_password>x</user_password>
+      <username>x</username>
+    </user>
+  </users>
+  <files t="list">
+    <file t="map">
+      <file_path>/etc/chromium/policies/</file_path>
+      <file_owner>root.root</file_owner>
+      <file_permissions>755</file_permissions>
+    </file>
+    <file t="map">
+      <file_path>/etc/chromium/policies/managed/</file_path>
+      <file_owner>root.root</file_owner>
+      <file_permissions>755</file_permissions>
+    </file>
+    <file t="map">
+      <file_path>/etc/chromium/policies/recommended/</file_path>
+      <file_owner>root.root</file_owner>
+      <file_permissions>755</file_permissions>
+    </file>
+    <file t="map">
+      <file_path>/etc/firefox/</file_path>
+      <file_owner>root.root</file_owner>
+      <file_permissions>755</file_permissions>
+    </file>
+    <file t="map">
+      <file_path>/etc/firefox/policies/</file_path>
+      <file_owner>root.root</file_owner>
+      <file_permissions>755</file_permissions>
+    </file>
+    <file t="map">
+      <file_path>/usr/lib64/thunderbird/</file_path>
+      <file_owner>root.root</file_owner>
+      <file_permissions>755</file_permissions>
+    </file>
+    <file t="map">
+      <file_path>/usr/lib64/thunderbird/isp/</file_path>
+      <file_owner>root.root</file_owner>
+      <file_permissions>755</file_permissions>
+    </file>
+    <% if board == :'PRIME H370M-PLUS' %>
+    <file t="map">
+      <file_path>/etc/apcupsd/apcupsd.conf</file_path>
+      <file_contents><![CDATA[## apcupsd.conf v1.1 ##
+UPSCABLE usb
+UPSTYPE usb
+DEVICE 
+LOCKFILE /var/lock
+SCRIPTDIR /etc/apcupsd
+PWRFAILDIR /etc/apcupsd
+NOLOGINDIR /etc
+
+ONBATTERYDELAY 6
+BATTERYLEVEL 5
+MINUTES 3
+TIMEOUT 0
+ANNOY 300
+ANNOYDELAY 60
+NOLOGON disable
+KILLDELAY 0
+
+NETSERVER on
+NISIP 0.0.0.0
+NISPORT 3551
+EVENTSFILE /var/log/apcupsd.events
+EVENTSFILEMAX 10
+
+UPSCLASS standalone
+UPSMODE disable
+
+STATTIME 0
+STATFILE /var/log/apcupsd.status
+LOGSTATS off
+DATATIME 0
+]]>
+      </file_contents>
+      <file_owner>root.root</file_owner>
+      <file_permissions>644</file_permissions>
+    </file>
+    <% end %>
+    <file t="map">
+      <file_path>/etc/chromium/policies/managed/chromium-policies.json</file_path>
+      <file_contents><![CDATA[{
+  "AlternateErrorPagesEnabled": false,
+  "AutofillAddressEnabled": false,
+  "AutofillCreditCardEnabled": false,
+  "AutoplayAllowed": false,
+  "BackgroundModeEnabled": false,
+  "CloudPrintProxyEnabled": false,
+  "DefaultFileSystemReadGuardSetting": 2,
+  "DefaultFileSystemWriteGuardSetting": 2,
+  "DefaultGeolocationSetting": 2,
+  "DefaultSerialGuardSetting": 2,
+  "DefaultWebBluetoothGuardSetting": 2,
+  "DefaultWebHidGuardSetting": 2,
+  "DefaultWebUsbGuardSetting": 2,
+  "DownloadRestrictions": 4,
+  "EnableMediaRouter": false,
+  "EnableOnlineRevocationChecks": true,
+  "ForceGoogleSafeSearch": true,
+  "InsecureFormsWarningsEnabled": true,
+  "NetworkPredictionOptions": 2,
+  "PasswordManagerEnabled": false,
+  "PaymentMethodQueryEnabled": false,
+  "PrivacySandboxAdMeasurementEnabled": false,
+  "PrivacySandboxAdTopicsEnabled": false,
+  "PrivacySandboxPromptEnabled": false,
+  "PrivacySandboxSiteEnabledAdsEnabled": false,
+  "PromptForDownloadLocation": true,
+  "QuicAllowed": false,
+  "RemoteAccessHostFirewallTraversal": false,
+  "SafeBrowsingProtectionLevel": 1,
+  "SafeSitesFilterBehavior": 1,
+  "SearchSuggestEnabled": false,
+  "ShowHomeButton": true,
+  "SitePerProcess": true,
+  "SyncDisabled": true,
+  "URLBlocklist": [
+    "javascript://*"
+  ],
+  "UrlKeyedAnonymizedDataCollectionEnabled": false
+}
+]]>
+      </file_contents>
+      <file_owner>root.root</file_owner>
+      <file_permissions>644</file_permissions>
+    </file>
+    <file t="map">
+      <file_path>/etc/ddclient.conf</file_path>
+      <file_contents><![CDATA[daemon=300
+pid=/run/ddclient/ddclient.pid
+protocol=dyndns2
+ssl=yes
+syslog=no
+
+use=web, \
+web=myip.dnsomatic.com, \
+server=updates.opendns.com, \
+login=somebody@example.com, \
+password='' \
+Home
+
+]]>
+      </file_contents>
+      <file_owner>ddclient.root</file_owner>
+      <file_permissions>600</file_permissions>
+    </file>
+    <file t="map">
+      <file_path>/etc/firefox/policies/policies.json</file_path>
+      <file_contents><![CDATA[{
+  "policies": {
+    "DisabledCiphers": {
+      "TLS_RSA_WITH_3DES_EDE_CBC_SHA": true
+    },
+    "DisableFirefoxAccounts": true,
+    "DisableFirefoxStudies": true,
+    "DisableFormHistory": true,
+    "DisablePocket": true,
+    "DisableTelemetry": true,
+    "EnableTrackingProtection": {
+      "Value": true,
+      "Locked": true,
+      "Cryptomining": true,
+      "EmailTracking": true,
+      "Fingerprinting": true,
+      "Exceptions": []
+    },
+    "FirefoxHome": {
+      "Search": false,
+      "TopSites": false,
+      "SponsoredTopSites": false,
+      "Highlights": false,
+      "Pocket": false,
+      "SponsoredPocket": false,
+      "Snippets": false,
+      "Locked": true
+    },
+    "NetworkPrediction": false,
+    "NewTabPage": false,
+    "OfferToSaveLogins": false,
+    "OverrideFirstRunPage": "",
+    "OverridePostUpdatePage": "",
+    "PasswordManagerEnabled": false,
+    "Permissions": {
+      "Autoplay": {
+        "Default": "block-audio-video",
+        "Locked": true
+      }
+    },
+    "Preferences": {
+      "browser.cache.disk.enable":{
+        "Value": false,
+        "Status": "locked"
+      },
+      "browser.contentblocking.category": {
+        "Value": "strict",
+        "Status": "locked"
+      },
+      "browser.fixup.domainsuffixwhitelist.lan": {
+        "Value": true,
+        "Status": "locked"
+      },
+      "browser.urlbar.suggest.quicksuggest.nonsponsored": {
+        "Value": false,
+        "Status": "locked"
+      },
+      "browser.urlbar.suggest.quicksuggest.sponsored": {
+        "Value": false,
+        "Status": "locked"
+      },
+      "browser.urlbar.suggest.topsites": {
+        "Value": false,
+        "Status": "locked"
+      },
+      "dom.disable_window_flip": {
+        "Value": true,
+        "Status": "locked"
+      },
+      "dom.disable_window_move_resize": {
+        "Value": true,
+        "Status": "locked"
+      },
+      "extensions.formautofill.addresses.enabled": {
+        "Value": false,
+        "Status": "locked"
+      },
+      "extensions.formautofill.creditCards.enabled": {
+        "Value": false,
+        "Status": "locked"
+      },
+      "extensions.htmlaboutaddons.recommendations.enabled": {
+        "Value": false,
+        "Status": "locked"
+      },
+      "network.IDN_show_punycode": {
+        "Value": true,
+        "Status": "locked"
+      },
+      "privacy.globalprivacycontrol.enabled": {
+        "Value": true,
+        "Status": "locked"
+      },
+      "privacy.globalprivacycontrol.functionality.enabled": {
+        "Value": true,
+        "Status": "locked"
+      },
+      "security.warn_submit_secure_to_insecure": {
+        "Value": true,
+        "Status": "locked"
+      }       
+    },
+    "SearchSuggestEnabled": false,
+    "SSLVersionMin": "tls1.2",
+    "UserMessaging": {
+      "ExtensionRecommendations": false,
+      "SkipOnboarding": true,
+      "Locked": true
+    }
+  }
+}
+]]>
+      </file_contents>
+      <file_owner>root.root</file_owner>
+      <file_permissions>644</file_permissions>
+    </file>
+    <file t="map">
+      <file_path>/etc/NetworkManager/dispatcher.d/20-chrony-dhcp</file_path>
+      <file_contents><![CDATA[#!/bin/bash
+export LC_ALL=C
+
+interface=$1
+action=$2
+
+chronyc=/usr/bin/chronyc
+default_server_options=
+
+# DHCP4_NTP_SERVERS is passed from DHCP options by NetworkManager.
+nm_dhcp_servers=$DHCP4_NTP_SERVERS
+
+clear_server_from_dhcp() {
+    if [ "$nm_dhcp_servers" ]; then
+        server=$($chronyc -c sources | cut -d, -f3)
+        if [ "$server" ]; then
+            $chronyc -n delete "$server" > /dev/null 2>&1 || :
+        fi
+    fi
+}
+
+add_server_from_dhcp() {
+    if [ "$nm_dhcp_servers" ]; then
+        for server in $nm_dhcp_servers; do
+            $chronyc -n add server $server > /dev/null 2>&1 || :
+            break
+        done
+    fi
+}
+
+if [ "$action" = "up" ] || [ "$action" = "dhcp4-change" ]; then
+    clear_server_from_dhcp
+    add_server_from_dhcp
+fi
+
+exit 0
+]]>
+      </file_contents>
+      <file_owner>root.root</file_owner>
+      <file_permissions>755</file_permissions>
+    </file>
+    <file t="map">
+      <file_path>/etc/security/limits.conf</file_path>
+      <file_contents><![CDATA[
+# man limits.conf
+#
+*               soft    core            0
+]]>
+      </file_contents>
+      <file_owner>root.root</file_owner>
+      <file_permissions>644</file_permissions>
+    </file>
+  </files>
+</profile>

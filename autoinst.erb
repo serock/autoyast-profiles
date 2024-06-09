@@ -220,7 +220,6 @@ nmcli radio all off
   <software t="map">
     <install_recommended t="boolean">true</install_recommended>
     <packages t="list">
-      <% if board == :'PRIME H370M-PLUS' %><package>apcupsd</package><% end %>
       <package>autoyast2-installation</package>
       <package>autoyast2</package>
       <package>chrony-pool-empty</package>
@@ -234,17 +233,56 @@ nmcli radio all off
       <pattern>yast2_basis</pattern>
     </patterns>
     <post-packages t="list">
-      <% if board == :'PRIME H370M-PLUS' %><package>apcupsd-gui</package><% end %>
+      <package>avahi-utils</package>
+      <package>chromium</package>
+      <package>git-core</package>
       <package>gstreamer-1.20-plugin-openh264</package>
+      <package>hplip-scan-utils</package>
+      <package>imagewriter</package>
       <package>keepassxc</package>
       <package>libcap-ng-utils</package>
       <package>libfido2-udev</package>
-      <package>lsb-release</package>
+      <package>libpcap-devel</package>
       <package>mozilla-openh264</package>
-      <% if board == :'PRIME H370M-PLUS' %><package>nvme-cli</package><% end %>
+      <package>python3-Pillow-tk</package>
+      <package>simple-scan</package>
       <package>wireshark-ui-qt</package>
-      <package>yubikey-manager</package>
       <package>yubikey-manager-qt</package>
+      <% if board == :'PRIME H370M-PLUS' %>
+      <package>apcupsd-gui</package>
+      <package>bash-completion-devel</package>
+      <package>bash-completion-doc</package>
+      <package>binwalk</package>
+      <package>checksec</package>
+      <package>devscripts</package>
+      <package>docker-bash-completion</package>
+      <package>dpkg</package>
+      <package>gcc-PIE</package>
+      <package>gcc-ada</package>
+      <package>gcc-c++</package>
+      <package>gcc13-PIE</package>
+      <package>gcc13-ada</package>
+      <package>gcc13-c++</package>
+      <package>git-gui</package>
+      <package>gitk</package>
+      <package>gnucash</package>
+      <package>homebank</package>
+      <package>java-17-openjdk-devel</package>
+      <package>jing</package>
+      <package>libreoffice-sdk</package>
+      <package>libreoffice-sdk-doc</package>
+      <package>maven</package>
+      <package>mkvtoolnix</package>
+      <package>nvme-cli-bash-completion</package>
+      <package>osc</package>
+      <package>pavucontrol</package>
+      <package>quilt</package>
+      <package>rpm-devel</package>
+      <package>rpmdevtools</package>
+      <package>rpmlint</package>
+      <package>rpmlint-Factory</package>
+      <package>virtualbox-qt</package>
+      <% end %>
     </post-packages>
     <remove-packages t="list">
       <package>chrony-pool-openSUSE</package>

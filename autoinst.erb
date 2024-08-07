@@ -419,6 +419,8 @@ DATATIME 0
   "DefaultWebBluetoothGuardSetting": 2,
   "DefaultWebHidGuardSetting": 2,
   "DefaultWebUsbGuardSetting": 2,
+  "DnsOverHttpsMode": "secure",
+  "DnsOverHttpsTemplates": "https://doh.opendns.com/dns-query",
   "DownloadRestrictions": 4,
   "EnableMediaRouter": false,
   "EnableOnlineRevocationChecks": true,
@@ -488,6 +490,13 @@ Home
     "DisableFormHistory": true,
     "DisablePocket": true,
     "DisableTelemetry": true,
+    "DNSOverHTTPS": {
+      "Enabled": true,
+      "ProviderURL": "https://doh.opendns.com/dns-query",
+      "ExcludedDomains": [],
+      "Locked": true,
+      "Fallback": false
+    },
     "EnableTrackingProtection": {
       "Value": true,
       "Locked": true,

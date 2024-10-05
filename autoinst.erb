@@ -456,14 +456,15 @@ DATATIME 0
     </file>
     <file t="map">
       <file_path>/etc/ddclient.conf</file_path>
-      <file_contents><![CDATA[daemon=300
+      <file_contents><![CDATA[curl=yes
+daemon=300
 pid=/run/ddclient/ddclient.pid
 protocol=dyndns2
 ssl=yes
 syslog=no
 
-use=web, \
-web=myip.dnsomatic.com, \
+usev4=webv4, \
+webv4=myip.dnsomatic.com, \
 server=updates.opendns.com, \
 login=somebody@example.com, \
 password='' \

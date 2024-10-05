@@ -220,6 +220,9 @@ nmcli radio all off
   <software t="map">
     <install_recommended t="boolean">true</install_recommended>
     <packages t="list">
+      <% if board == :'PRIME H370M-PLUS' %>
+      <package>apcupsd</package>
+      <% end %>
       <package>autoyast2-installation</package>
       <package>autoyast2</package>
       <package>chrony-pool-empty</package>

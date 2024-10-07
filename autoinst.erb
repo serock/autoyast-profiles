@@ -43,6 +43,20 @@
       <secure_boot><%= board != :'4239CTO' %></secure_boot>
     </global>
   </bootloader>
+  <firewall t="map">
+    <default_zone>public</default_zone>
+    <enable_firewall t="boolean">true</enable_firewall>
+    <log_denied_packets>off</log_denied_packets>
+    <start_firewall t="boolean">true</start_firewall>
+    <zones t="list">
+      <zone t="map">
+        <name>home</name>
+        <interfaces t="list">
+          <interface>eth0</interface>
+        </interfaces>
+      </zone>
+    </zones>
+  </firewall>
   <general t="map">
     <ask-list t="list">
       <ask t="map">

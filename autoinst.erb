@@ -109,13 +109,13 @@
     <language>en_US</language>
   </language>
   <networking t="map">
+    <backend>network_manager</backend>
     <dns t="map">
       <dhcp_hostname t="boolean">false</dhcp_hostname>
       <hostname><%= { 'PRIME H370M-PLUS': 'desktop', '4239CTO': 'laptop15', 'IPXBD-RB': 'mini' }[board] %></hostname>
       <resolv_conf_policy>auto</resolv_conf_policy>
     </dns>
     <keep_install_network t="boolean">true</keep_install_network>
-    <managed t="boolean">true</managed>
   </networking>
   <ntp-client t="map">
     <ntp_policy>auto</ntp_policy>

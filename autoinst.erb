@@ -62,6 +62,7 @@
       <ask t="map">
         <question>Enter the username:</question>
         <password t="boolean">false</password>
+        <file>/tmp/answer-username</file>
         <pathlist t="list">
           <path>users,1,fullname</path>
           <path>users,1,username</path>
@@ -172,6 +173,17 @@
     </drive>
   </partitioning>
   <scripts t="map">
+    <chroot-scripts t="list">
+      <script t="map">
+        <chrooted t="boolean">false</chrooted>
+        <feedback t="boolean">false</feedback>
+        <filename>chroot-script-username.sh</filename>
+        <source><![CDATA[#!/bin/bash
+cp /tmp/answer-username /mnt/tmp/answer-username
+]]>
+        </source>
+      </script>
+    </chroot-scripts>
     <post-scripts t="list">
       <script t="map">
         <feedback t="boolean">false</feedback>
@@ -212,6 +224,20 @@ ipv6.method auto
         <filename>init-script-nm.sh</filename>
         <source><![CDATA[#!/bin/bash
 nmcli radio all off
+]]>
+        </source>
+      </script>
+      <script t="map">
+        <filename>init-script-virtualbox.sh</filename>
+        <source><![CDATA[#!/bin/bash
+usermod --append --groups vboxusers $(cat /tmp/answer-username)
+]]>
+        </source>
+      </script>
+      <script t="map">
+        <filename>init-script-wireshark.sh</filename>
+        <source><![CDATA[#!/bin/bash
+usermod --append --groups wireshark $(cat /tmp/answer-username)
 ]]>
         </source>
       </script>

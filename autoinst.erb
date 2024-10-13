@@ -2,38 +2,28 @@
 <!DOCTYPE profile>
 <profile xmlns="http://www.suse.com/1.0/yast2ns">
   <add-on t="map">
-    <add_on_products t="list">
-      <listentry t="map">
-        <alias>repo-oss</alias>
-        <media_url><![CDATA[http://download.opensuse.org/distribution/leap/$releasever/repo/oss/]]></media_url>
-        <name>Main Repository</name>
-        <product>Leap</product>
-      </listentry>
+    <add_on_others t="list">
       <listentry t="map">
         <alias>repo-update</alias>
         <media_url><![CDATA[http://download.opensuse.org/update/leap/$releasever/oss/]]></media_url>
         <name>Main Update Repository</name>
-        <product>Leap</product>
       </listentry>
       <listentry t="map">
         <alias>repo-backports-update</alias>
         <media_url><![CDATA[http://download.opensuse.org/update/leap/$releasever/backports/]]></media_url>
         <name>Update repository of openSUSE Backports</name>
-        <product>Leap</product>
       </listentry>
       <listentry t="map">
         <alias>repo-sle-update</alias>
         <media_url><![CDATA[http://download.opensuse.org/update/leap/$releasever/sle/]]></media_url>
         <name>Update repository with updates from SUSE Linux Enterprise 15</name>
-        <product>Leap</product>
       </listentry>
       <listentry t="map">
         <alias>repo-openh264</alias>
         <media_url><![CDATA[http://codecs.opensuse.org/openh264/openSUSE_Leap/]]></media_url>
         <name>Open H.264 Codec (openSUSE Leap)</name>
-        <product>Leap</product>
       </listentry>
-    </add_on_products>
+    </add_on_others>
   </add-on>
   <% board = `cat /sys/devices/virtual/dmi/id/board_name | tr -d '\n'`.to_sym %>
   <bootloader t="map">

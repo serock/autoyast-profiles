@@ -41,20 +41,6 @@
       <secure_boot><%= board != :'4239CTO' %></secure_boot>
     </global>
   </bootloader>
-  <firewall t="map">
-    <default_zone>public</default_zone>
-    <enable_firewall t="boolean">true</enable_firewall>
-    <log_denied_packets>off</log_denied_packets>
-    <start_firewall t="boolean">true</start_firewall>
-    <zones t="list">
-      <zone t="map">
-        <name>home</name>
-        <interfaces t="list">
-          <interface>eth0</interface>
-        </interfaces>
-      </zone>
-    </zones>
-  </firewall>
   <general t="map">
     <ask-list t="list">
       <ask t="map">
@@ -229,6 +215,7 @@ nmcli radio all off
 ]]>
         </source>
       </script>
+      <% if board == :'PRIME H370M-PLUS' %>
       <script t="map">
         <filename>init-script-virtualbox.sh</filename>
         <source><![CDATA[#!/bin/bash
@@ -236,6 +223,7 @@ usermod --append --groups vboxusers $(cat /tmp/answer-username)
 ]]>
         </source>
       </script>
+      <% end %>
       <script t="map">
         <filename>init-script-wireshark.sh</filename>
         <source><![CDATA[#!/bin/bash

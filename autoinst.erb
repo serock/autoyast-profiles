@@ -2,6 +2,14 @@
 <!DOCTYPE profile>
 <profile xmlns="http://www.suse.com/1.0/yast2ns">
   <add-on t="map">
+    <add_on_products t="list">
+      <listentry t="map">
+        <alias>repo-oss</alias>
+        <media_url><![CDATA[http://download.opensuse.org/distribution/leap/$releasever/repo/oss/]]></media_url>
+        <name>Main Repository</name>
+        <product>Leap</product>
+      </listentry>
+    </add_on_products>
     <add_on_others t="list">
       <listentry t="map">
         <alias>repo-update</alias>

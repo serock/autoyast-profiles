@@ -108,9 +108,9 @@
     <dns t="map">
       <dhcp_hostname t="boolean">false</dhcp_hostname>
       <hostname><%= { 'PRIME H370M-PLUS': 'desktop', '4239CTO': 'laptop15', 'IPXBD-RB': 'mini' }[board] %></hostname>
-      <resolv_conf_policy>auto</resolv_conf_policy>
     </dns>
-    <keep_install_network t="boolean">true</keep_install_network>
+    <ipv6 t="boolean">false</ipv6>
+    <keep_install_network t="boolean">false</keep_install_network>
   </networking>
   <ntp-client t="map">
     <ntp_policy>auto</ntp_policy>
@@ -185,10 +185,6 @@ cp /tmp/answer-username /mnt/tmp/answer-username
         <feedback t="boolean">false</feedback>
         <filename>post-script-nm.sh</filename>
         <source><![CDATA[#!/bin/bash
-nmcli connection modify eth0 \
-connection.autoconnect no \
-ethernet.wake-on-lan ignore
-
 nmcli connection add \
 connection.autoconnect no \
 connection.autoconnect-priority 10 \

@@ -190,9 +190,9 @@ connection.autoconnect no \
 connection.autoconnect-priority 10 \
 connection.id wired-lan-public \
 connection.interface-name eth0 \
-connection.type ethernet \
+connection.type 802-3-ethernet \
 connection.zone public \
-ethernet.wake-on-lan ignore \
+802-3-ethernet.wake-on-lan ignore \
 ipv4.dns "208.67.222.222 208.67.220.220" \
 ipv4.ignore-auto-dns yes \
 ipv4.method auto \
@@ -204,9 +204,9 @@ nmcli connection add \
 connection.autoconnect-priority 1 \
 connection.id wired-lan-home \
 connection.interface-name eth0 \
-connection.type ethernet \
+connection.type 802-3-ethernet \
 connection.zone home \
-ethernet.wake-on-lan ignore \
+802-3-ethernet.wake-on-lan ignore \
 ipv4.method auto \
 ipv6.method disabled
 ]]>

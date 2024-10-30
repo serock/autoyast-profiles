@@ -217,6 +217,13 @@ nmcli radio all off
       </script>
       <% if board == :'PRIME H370M-PLUS' %>
       <script t="map">
+        <filename>init-script-docker.sh</filename>
+        <source><![CDATA[#!/bin/bash
+usermod --append --groups docker $(cat /tmp/answer-username)
+]]>
+        </source>
+      </script>
+      <script t="map">
         <filename>init-script-virtualbox.sh</filename>
         <source><![CDATA[#!/bin/bash
 mkdir /usr/lib/virtualbox/additions

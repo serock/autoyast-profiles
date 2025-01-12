@@ -224,6 +224,14 @@ usermod --append --groups docker $(cat /tmp/answer-username)
         </source>
       </script>
       <script t="map">
+        <filename>init-script-osc.sh</filename>
+        <source><![CDATA[#!/bin/bash
+groupadd osc
+usermod --append --groups osc $(cat /tmp/answer-username)
+]]>
+        </source>
+      </script>
+      <script t="map">
         <filename>init-script-virtualbox.sh</filename>
         <source><![CDATA[#!/bin/bash
 mkdir /usr/lib/virtualbox/additions
@@ -705,5 +713,18 @@ exit 0
       <file_owner>root.root</file_owner>
       <file_permissions>644</file_permissions>
     </file>
+    <% if board == :'PRIME H370M-PLUS' %>
+    <file t="map">
+      <file_path>/etc/sudoers.d/osc</file_path>
+      <file_contents><![CDATA[
+# sudoers file "/etc/sudoers.d/osc" for the osc group
+Cmnd_Alias  OSC_CMD = /usr/bin/osc, /usr/bin/build
+%osc  ALL = (ALL) NOPASSWD:OSC_CMD
+]]>
+      </file_contents>
+      <file_owner>root.root</file_owner>
+      <file_permissions>644</file_permissions>
+    </file>
+    <% end %>
   </files>
 </profile>

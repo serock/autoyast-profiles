@@ -183,7 +183,6 @@ nmcli connection add \
 connection.autoconnect no \
 connection.autoconnect-priority 10 \
 connection.id wired-lan-public \
-connection.interface-name eth0 \
 connection.type 802-3-ethernet \
 connection.zone public \
 802-3-ethernet.wake-on-lan ignore \
@@ -197,7 +196,6 @@ ipv6.method auto
 nmcli connection add \
 connection.autoconnect-priority 1 \
 connection.id wired-lan-home \
-connection.interface-name eth0 \
 connection.type 802-3-ethernet \
 connection.zone home \
 802-3-ethernet.wake-on-lan ignore \

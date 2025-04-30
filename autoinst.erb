@@ -177,6 +177,15 @@ cp /tmp/answer-username /mnt/tmp/answer-username
     <post-scripts t="list">
       <script t="map">
         <feedback t="boolean">false</feedback>
+        <filename>post-script-chrony-dhcp.sh</filename>
+        <source><![CDATA[#!/bin/bash
+cp /usr/share/doc/packages/chrony/examples/chrony.nm-dispatcher.dhcp /etc/NetworkManager/dispatcher.d/20-chrony-dhcp
+chmod 755 /etc/NetworkManager/dispatcher.d/20-chrony-dhcp
+]]>
+        </source>
+      </script>
+      <script t="map">
+        <feedback t="boolean">false</feedback>
         <filename>post-script-nm.sh</filename>
         <source><![CDATA[#!/bin/bash
 nmcli connection add \
@@ -507,6 +516,12 @@ DATATIME 0
       <file_permissions>644</file_permissions>
     </file>
     <file t="map">
+      <file_path>/etc/chrony.d/dhcp.conf</file_path>
+      <file_contents><![CDATA[sourcedir /var/run/chrony-dhcp]]></file_contents>
+      <file_owner>root.root</file_owner>
+      <file_permissions>644</file_permissions>
+    </file>
+    <file t="map">
       <file_path>/etc/firefox/policies/policies.json</file_path>
       <file_contents><![CDATA[{
   "policies": {
@@ -634,49 +649,6 @@ DATATIME 0
       </file_contents>
       <file_owner>root.root</file_owner>
       <file_permissions>644</file_permissions>
-    </file>
-    <file t="map">
-      <file_path>/etc/NetworkManager/dispatcher.d/20-chrony-dhcp</file_path>
-      <file_contents><![CDATA[#!/bin/bash
-export LC_ALL=C
-
-interface=$1
-action=$2
-
-chronyc=/usr/bin/chronyc
-default_server_options=
-
-# DHCP4_NTP_SERVERS is passed from DHCP options by NetworkManager.
-nm_dhcp_servers=$DHCP4_NTP_SERVERS
-
-clear_server_from_dhcp() {
-    if [ "$nm_dhcp_servers" ]; then
-        server=$($chronyc -c sources | cut -d, -f3)
-        if [ "$server" ]; then
-            $chronyc -n delete "$server" > /dev/null 2>&1 || :
-        fi
-    fi
-}
-
-add_server_from_dhcp() {
-    if [ "$nm_dhcp_servers" ]; then
-        for server in $nm_dhcp_servers; do
-            $chronyc -n add server $server > /dev/null 2>&1 || :
-            break
-        done
-    fi
-}
-
-if [ "$action" = "up" ] || [ "$action" = "dhcp4-change" ]; then
-    clear_server_from_dhcp
-    add_server_from_dhcp
-fi
-
-exit 0
-]]>
-      </file_contents>
-      <file_owner>root.root</file_owner>
-      <file_permissions>755</file_permissions>
     </file>
     <file t="map">
       <file_path>/etc/security/limits.conf</file_path>

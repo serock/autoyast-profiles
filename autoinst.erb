@@ -288,7 +288,6 @@ zypper modifyrepo --disable openSUSE:repo-non-oss openSUSE:update-non-oss
       <package>autoyast2-installation</package>
       <package>autoyast2</package>
       <package>chrony-pool-empty</package>
-      <package>ddclient</package>
     </packages>
     <patterns t="list">
       <pattern>gnome</pattern>
@@ -506,27 +505,6 @@ DATATIME 0
       </file_contents>
       <file_owner>root.root</file_owner>
       <file_permissions>644</file_permissions>
-    </file>
-    <file t="map">
-      <file_path>/etc/ddclient.conf</file_path>
-      <file_contents><![CDATA[curl=yes
-daemon=300
-pid=/run/ddclient/ddclient.pid
-protocol=dyndns2
-ssl=yes
-syslog=no
-
-use=web, \
-web=myip.dnsomatic.com, \
-server=updates.opendns.com, \
-login=somebody@example.com, \
-password='' \
-Home
-
-]]>
-      </file_contents>
-      <file_owner>ddclient.root</file_owner>
-      <file_permissions>600</file_permissions>
     </file>
     <file t="map">
       <file_path>/etc/firefox/policies/policies.json</file_path>

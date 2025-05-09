@@ -15,16 +15,3 @@ Add the following space-separated parameters to the end of the line that starts 
 
 Press the `F10` key to continue the installation.
 
-## Post Installation
-
-Edit `/etc/ddclient.conf` to set the `login` and `password`.
-
-```
-sudo vi /etc/ddclient.conf
-```
-
-Enable and start the `ddclient` service.
-
-```
-sudo systemctl --now enable ddclient.service
-```
